@@ -1,54 +1,116 @@
-# React + TypeScript + Vite
+# User Management Module
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Features
 
-Currently, two official plugins are available:
+### 1. User Authentication
+- Login and Logout functionality.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 2. User CRUD
+- Create, Read, Update, and Delete users.
 
-## Expanding the ESLint configuration
+### 3. User Listing (Server Table)
+- Fetch user data from the server.
+- Display a loader while fetching data.
+- Paginated user listing.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 4. Search, Sorting, Filtering, and Pagination
+- Global Search.
+- Sorting on Name & Email columns.
+- Role-based filtering.
+- Pagination for efficient navigation.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### 5. Add/Edit User
+- Form-level validation to prevent invalid submissions.
+- Disable submission until the form is valid.
+- Use the same reusable form component for adding and editing users.
+
+### 6. User View (Popup)
+- Clicking the eye icon in the listing will open a user info popup.
+
+### 7. Delete Users
+- Support for single and multiple deletions.
+
+### 8. Export Users
+- Export user data to a CSV file.
+
+### 9. State Management
+- Utilize Redux Toolkit for state management.
+
+## Tech Stack
+- **Frontend:** React with Vite
+- **Styling:** Tailwind CSS
+- **State Management:** Redux Toolkit
+- **Type Checking:** TypeScript
+- **UI Components:** Radix UI
+- **Rich Text Editor:** Quill.js
+
+## Installation & Setup
+1. Clone the repository:
+   ```sh
+   git clone <repo-url>
+   cd <project-folder>
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+## Usage
+- Navigate to the authentication page to log in.
+- Manage users via CRUD operations.
+- Search, filter, and sort user entries efficiently.
+- Export user data when required.
+
+## Notes
+- Ensure the server API is running for proper functionality.
+- Modify configurations in the `.env` file as needed.
+
+## File Structure
+```
+user-management-system/
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── components/
+│   │   ├── Layout.tsx
+│   │   ├── Loader.tsx
+│   │   ├── UserForm.tsx
+│   │   ├── UserModal.tsx
+│   │   └── UserTable.tsx
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   └── useUsers.ts
+│   ├── pages/
+│   │   ├── Dashboard.tsx
+│   │   └── Login.tsx
+│   ├── store/
+│   │   ├── slices/
+│   │   │   ├── authSlice.ts
+│   │   │   └── usersSlice.ts
+│   │   └── index.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── utils/
+│   │   └── uuid.ts
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── index.css
+│   ├── App.css
+│   └── vite-env.d.ts
+├── .gitignore
+├── index.html
+├── package.json
+├── README.md
+├── tailwind.config.js
+├── postcss.config.js
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── eslint.config.js
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
