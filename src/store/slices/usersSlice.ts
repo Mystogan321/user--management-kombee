@@ -43,13 +43,13 @@ const initialState: UsersState = {
   isLoading: false,
   error: null,
   currentPage: 1,
-  totalPages: 1,
   itemsPerPage: 10,
   selectedUsers: [],
   searchTerm: '',
   roleFilter: '',
   sortField: 'name',
   sortDirection: 'asc',
+  totalPages: Math.ceil(getInitialUsers().length / 10), // Calculate totalPages based on initial users
 };
 
 const usersSlice = createSlice({

@@ -71,20 +71,7 @@ const UserTable = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
-        <div className="flex space-x-8">
-          <button className="border-b-2 border-primary px-1 py-4 text-sm font-medium text-primary">
-            Listing
-          </button>
-          <button className="px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700">
-            Import
-          </button>
-          <button className="px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700">
-            Import Zip
-          </button>
-        </div>
-      </div>
+
 
       {/* Search and Actions */}
       <div className="flex justify-between mb-6">
