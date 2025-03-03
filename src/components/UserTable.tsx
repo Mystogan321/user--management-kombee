@@ -122,7 +122,6 @@ const UserTable = () => {
               onClick={() => setShowMultiDeleteConfirm(true)}
             >
               <FaTrash size={14} />
-              <span>Delete Selected</span>
             </button>
           )}
         </div>
@@ -166,9 +165,42 @@ const UserTable = () => {
                   )} />
                 </div>
               </th>
-              <th className="table-header">Role</th>
-              <th className="table-header">DOB</th>
-              <th className="table-header">Gender</th>
+              <th 
+                className="table-header cursor-pointer"
+                onClick={() => handleSort('role')}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>Role</span>
+                  <FaSort className={clsx(
+                    "ml-1",
+                    sortField === 'role' && "text-blue-300"
+                  )} />
+                </div>
+              </th>
+              <th 
+                className="table-header cursor-pointer"
+                onClick={() => handleSort('dob')}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>D.O.B</span>
+                  <FaSort className={clsx(
+                    "ml-1",
+                    sortField === 'dob' && "text-blue-300"
+                  )} />
+                </div>
+              </th>
+              <th 
+                className="table-header cursor-pointer"
+                onClick={() => handleSort('gender')}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>Gender</span>
+                  <FaSort className={clsx(
+                    "ml-1",
+                    sortField === 'gender' && "text-blue-300"
+                  )} />
+                </div>
+              </th>
               <th className="table-header">Status</th>
               <th className="table-header">Actions</th>
             </tr>
