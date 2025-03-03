@@ -1,5 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthState, LoginCredentials, User } from '../../types';
+import authService from '../../api/services/authService';
+import { toast } from 'react-toastify';
 
 const initialState: AuthState = {
   user: null,
@@ -17,78 +19,60 @@ if (storedUser && storedAuth) {
   initialState.isAuthenticated = JSON.parse(storedAuth);
 }
 
+// Async thunks
+export const login = createAsyncThunk(
+  'auth/login',
+  async (credentials: LoginCredentials, { rejectWithValue }) => {
+    try {
+      const response = await authService.login(credentials);
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem('isAuthenticated', JSON.stringify(true));
+      
+      return response.user;
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Invalid email or password';
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async () => {
+    await authService.logout();
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    loginStart: (state) => {
-      state.isLoading = true;
-      state.error = null;
-    },
-    loginSuccess: (state, action: PayloadAction<User>) => {
-      state.isLoading = false;
-      state.isAuthenticated = true;
-      state.user = action.payload;
-      state.error = null;
-      
-      // Store in localStorage
-      localStorage.setItem('user', JSON.stringify(action.payload));
-      localStorage.setItem('isAuthenticated', JSON.stringify(true));
-    },
-    loginFailure: (state, action: PayloadAction<string>) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-    logout: (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-      
-      // Clear localStorage
-      localStorage.removeItem('user');
-      localStorage.removeItem('isAuthenticated');
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      // Login
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action: PayloadAction<Omit<User, 'password'>>) => {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+        toast.error(action.payload as string);
+      })
+      // Logout
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+      });
   },
 });
-
-export const { loginStart, loginSuccess, loginFailure, logout } = authSlice.actions;
-
-// Thunk for login
-export const login = (credentials: LoginCredentials) => async (dispatch: any) => {
-  try {
-    dispatch(loginStart());
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Get users from localStorage or use default admin
-    const usersJSON = localStorage.getItem('users');
-    const users: User[] = usersJSON ? JSON.parse(usersJSON) : [
-      {
-        id: '1',
-        name: 'Administrator',
-        email: 'admin@gmail.com',
-        role: 'Administrator',
-        status: 'Active',
-        password: 'admin123'
-      }
-    ];
-    
-    // Find user with matching credentials
-    const user = users.find(
-      (user) => user.email === credentials.email && user.password === credentials.password
-    );
-    
-    if (user) {
-      dispatch(loginSuccess(user));
-      return true;
-    } else {
-      dispatch(loginFailure('Invalid email or password'));
-      return false;
-    }
-  } catch (error) {
-    dispatch(loginFailure('An error occurred during login'));
-    return false;
-  }
-};
 
 export default authSlice.reducer;

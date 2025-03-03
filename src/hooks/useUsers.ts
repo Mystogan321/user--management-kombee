@@ -1,23 +1,24 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
+import { AppDispatch, RootState } from '../store';
 import { 
-  addUser, 
-  updateUser, 
-  deleteUser, 
-  deleteMultipleUsers,
+  fetchUsers,
+  createUser, 
+  updateUserThunk, 
+  deleteUserThunk, 
+  deleteMultipleUsersThunk,
   setCurrentPage,
   setItemsPerPage,
   toggleSelectUser,
   selectAllUsers,
   setSearchTerm,
   setRoleFilter,
-  setSortField,
-  setLoading
+  setSortField
 } from '../store/slices/usersSlice';
 import { User } from '../types';
+import { useEffect } from 'react';
 
 export const useUsers = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { 
     users,
     filteredUsers,
@@ -32,6 +33,11 @@ export const useUsers = () => {
     sortField,
     sortDirection
   } = useSelector((state: RootState) => state.users);
+
+  // Fetch users on component mount
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   // Get current page data
   const getCurrentPageUsers = () => {
@@ -49,48 +55,23 @@ export const useUsers = () => {
 
   // Add a new user
   const addNewUser = (userData: Omit<User, 'id'>) => {
-    dispatch(setLoading(true));
-    
-    // Simulate API delay
-    setTimeout(() => {
-      dispatch(addUser(userData));
-      dispatch(setLoading(false));
-    }, 500);
+    dispatch(createUser(userData));
   };
 
   // Update an existing user
   const updateExistingUser = (userData: User) => {
-    dispatch(setLoading(true));
-    
-    // Simulate API delay
-    setTimeout(() => {
-      dispatch(updateUser(userData));
-      dispatch(setLoading(false));
-    }, 500);
+    dispatch(updateUserThunk(userData));
   };
 
   // Delete a user
   const deleteExistingUser = (userId: string) => {
-    dispatch(setLoading(true));
-    
-    // Simulate API delay
-    setTimeout(() => {
-      dispatch(deleteUser(userId));
-      dispatch(setLoading(false));
-    }, 500);
+    dispatch(deleteUserThunk(userId));
   };
 
   // Delete multiple users
   const deleteSelectedUsers = () => {
     if (selectedUsers.length === 0) return;
-    
-    dispatch(setLoading(true));
-    
-    // Simulate API delay
-    setTimeout(() => {
-      dispatch(deleteMultipleUsers());
-      dispatch(setLoading(false));
-    }, 500);
+    dispatch(deleteMultipleUsersThunk(selectedUsers));
   };
 
   // Toggle user selection

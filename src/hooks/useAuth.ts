@@ -1,20 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
-import { login as loginAction, logout as logoutAction } from '../store/slices/authSlice';
+import { AppDispatch, RootState } from '../store';
+import { login, logout } from '../store/slices/authSlice';
 import { LoginCredentials } from '../types';
 
 export const useAuth = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { user, isAuthenticated, isLoading, error } = useSelector(
     (state: RootState) => state.auth
   );
 
-  const login = async (credentials: LoginCredentials) => {
-    return await dispatch(loginAction(credentials) as any);
+  const loginUser = async (credentials: LoginCredentials) => {
+    const resultAction = await dispatch(login(credentials));
+    return login.fulfilled.match(resultAction);
   };
 
-  const logout = () => {
-    dispatch(logoutAction());
+  const logoutUser = () => {
+    dispatch(logout());
   };
 
   return {
@@ -22,7 +23,7 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
-    login,
-    logout,
+    login: loginUser,
+    logout: logoutUser,
   };
 };

@@ -6,7 +6,7 @@ export interface User {
   dob?: string;
   gender?: Gender;
   status: Status;
-  password: string;
+  password?: string;
 }
 
 export enum Role {
@@ -32,6 +32,7 @@ export interface AuthState {
   isLoading: boolean;
   error: string | null;
 }
+
 
 export interface UsersState {
   users: User[];
