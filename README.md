@@ -10,7 +10,7 @@
 
 ### 3. User Listing (Server Table)
 - Fetch user data from the server.
-- Display a loader while fetching data.
+- Display a loader while fetching data using mock api.
 - Paginated user listing.
 
 ### 4. Search, Sorting, Filtering, and Pagination
